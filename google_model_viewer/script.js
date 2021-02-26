@@ -37,14 +37,17 @@ window.onload = () => {
     // first get current user location
     return navigator.geolocation.getCurrentPosition(function (position) {
         alert(position.coords.latitude + " " + position.coords.longitude)
+        lonLatToVector3(position.coords.longitude, position.coords.latitude, (val) => {
+            alert(val);
+            console.log(val);
+        })
         // than use it to load from remote APIs some places nearby
         loadPlaces(position.coords)
             .then((places) => {
-                alert("places.count");
                 places.forEach((place) => {
                     const latitude = place.location.lat;
                     const longitude = place.location.lng;
-                    alert("places.count" + longitude + " " + longitude);
+                    // alert("places.count" + longitude + " " + longitude);
                     console.log(longitude, latitude)
                     // add place name
                     const placeText = document.createElement('a-link');
