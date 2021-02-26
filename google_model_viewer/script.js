@@ -31,16 +31,37 @@ function loadPlaces(position) {
 };
 
 
+/**
+ * converts a XYZ vector3 to longitude latitude (Direct Polar)
+ * @param lng longitude
+ * @param lat latitude
+ * @param vector3 optional output vector3
+ * @returns a unit vector of the 3d position
+ */
+function lonLatToVector3( lng, lat )
+{
+    out = out || new THREE.Vector3();
+
+    //flips the Y axis
+    lat = Math.PI / 2 - lat;
+
+    return [
+        Math.sin( lat ) * Math.sin( lng ),
+        Math.cos( lat ),
+        Math.sin( lat ) * Math.cos( lng )
+    ];
+
+}
+
 window.onload = () => {
     const scene = document.querySelector('a-scene');
 
     // first get current user location
     return navigator.geolocation.getCurrentPosition(function (position) {
         alert(position.coords.latitude + " " + position.coords.longitude)
-        lonLatToVector3(position.coords.longitude, position.coords.latitude, (val) => {
-            alert(val);
-            console.log(val);
-        })
+        var val = lonLatToVector3(position.coords.longitude, position.coords.latitude)
+        console.log(val)
+        alert(val)
         // than use it to load from remote APIs some places nearby
         loadPlaces(position.coords)
             .then((places) => {
