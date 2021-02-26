@@ -59,8 +59,8 @@ function lonLatToVector3( lng, lat )
  */
 function vector3toLonLat( vector3 )
 {
-
-    vector3.normalize();
+    console.log(vector3)
+    // vector3.normalize();
 
     //longitude = angle of the vector around the Y axis
     //-( ) : negate to flip the longitude (3d space specific )
@@ -75,7 +75,7 @@ function vector3toLonLat( vector3 )
     //project on the XZ plane
     var p = new THREE.Vector3( vector3.x, 0, vector3.z );
     //project on the unit sphere
-    p.normalize();
+    // p.normalize();
 
     //commpute the angle ( both vectors are normalized, no division by the sum of lengths )
     var lat = Math.acos( p.dot( vector3 ) );
