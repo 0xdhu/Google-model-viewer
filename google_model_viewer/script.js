@@ -40,8 +40,6 @@ function loadPlaces(position) {
  */
 function lonLatToVector3( lng, lat )
 {
-    out = out || new THREE.Vector3();
-
     //flips the Y axis
     lat = Math.PI / 2 - lat;
 
@@ -53,15 +51,54 @@ function lonLatToVector3( lng, lat )
 
 }
 
+
+/**
+ * converts a XYZ THREE.Vector3 to longitude latitude. beware, the vector3 will be normalized!
+ * @param vector3 
+ * @returns an array containing the longitude [0] & the lattitude [1] of the Vector3
+ */
+function vector3toLonLat( vector3 )
+{
+
+    vector3.normalize();
+
+    //longitude = angle of the vector around the Y axis
+    //-( ) : negate to flip the longitude (3d space specific )
+    //- PI / 2 to face the Z axis
+    var lng = -( Math.atan2( -vector3.z, -vector3.x ) ) - Math.PI / 2;
+
+    //to bind between -PI / PI
+    if( lng < - Math.PI )lng += Math.PI * 2;
+
+    //latitude : angle between the vector & the vector projected on the XZ plane on a unit sphere
+
+    //project on the XZ plane
+    var p = new THREE.Vector3( vector3.x, 0, vector3.z );
+    //project on the unit sphere
+    p.normalize();
+
+    //commpute the angle ( both vectors are normalized, no division by the sum of lengths )
+    var lat = Math.acos( p.dot( vector3 ) );
+
+    //invert if Y is negative to ensure teh latitude is comprised between -PI/2 & PI / 2
+    if( vector3.y < 0 ) lat *= -1;
+
+    return [ lng,lat ];
+
+}
+
 window.onload = () => {
     const scene = document.querySelector('a-scene');
 
     // first get current user location
     return navigator.geolocation.getCurrentPosition(function (position) {
-        alert(position.coords.latitude + " " + position.coords.longitude)
+        console.log(position.coords.latitude + " " + position.coords.longitude)
+        
         var val = lonLatToVector3(position.coords.longitude, position.coords.latitude)
         console.log(val)
-        alert(val)
+        
+        var vll = vector3toLonLat(val)
+        console.log(vll)
         // than use it to load from remote APIs some places nearby
         loadPlaces(position.coords)
             .then((places) => {
