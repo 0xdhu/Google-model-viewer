@@ -97,7 +97,7 @@ window.onload = () => {
         var val = lonLatToVector3(position.coords.longitude, position.coords.latitude)
         console.log(val)
         
-        var vll = vector3toLonLat(val)
+        var vll = vector3toLonLat((new THREE.Vector3(val[0], val[1], val[2])))
         console.log(vll)
         // than use it to load from remote APIs some places nearby
         loadPlaces(position.coords)
