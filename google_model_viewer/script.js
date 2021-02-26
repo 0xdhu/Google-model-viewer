@@ -40,8 +40,6 @@ function loadPlaces(position) {
  */
 function lonLatToVector3( lng, lat )
 {
-    out = out || new THREE.Vector3();
-
     //flips the Y axis
     lat = Math.PI / 2 - lat;
 
